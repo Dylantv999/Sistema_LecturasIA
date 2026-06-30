@@ -181,6 +181,13 @@ public class Program
         app.UseSwagger();
         app.UseSwaggerUI();
 
+        // Asegurar que la carpeta wwwroot exista para que UseStaticFiles no devuelva 404
+        var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+        if (!Directory.Exists(wwwrootPath))
+        {
+            Directory.CreateDirectory(wwwrootPath);
+        }
+
         // Servir archivos estáticos (imágenes generadas)
         app.UseStaticFiles();
 

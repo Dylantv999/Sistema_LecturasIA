@@ -46,8 +46,9 @@ namespace LecturaIA.API.Services
                 // PASO 1: Generar título y contenido con Gemini
                 var (titulo, contenido) = await GenerarTextoConGeminiAsync(preferencias, tipoLectura, edad, grado);
 
-                // PASO 2: Generar imagen con Hugging Face
-                var urlImagen = string.Empty;
+                // PASO 2: Generar imagen con IA
+                var promptImagen = $"Children's book illustration, {preferencias.Escenario}, {string.Join(", ", preferencias.Personajes)}, {string.Join(", ", preferencias.Temas)}, colorful, friendly style, detailed, high quality, cartoon style";
+                var urlImagen = await GenerarImagenConIAAsync(promptImagen, "lecturas");
 
                 return (titulo, contenido, urlImagen);
             }
@@ -458,7 +459,8 @@ Responde SOLO con el JSON, sin texto adicional.";
                                 var titulo = lecturaJson.RootElement.GetProperty("titulo").GetString() ?? temaConcepto;
                                 var contenido = lecturaJson.RootElement.GetProperty("contenido").GetString() ?? "";
 
-                                var urlImagen = string.Empty;
+                                var promptImagen = $"Educational illustration for children, {temaConcepto}, colorful, clear, detailed, high quality, professional";
+                                var urlImagen = await GenerarImagenConIAAsync(promptImagen, "examenes");
 
                                 // Crear entidad Lectura
                                 lecturaGenerada = new Models.Entities.Lectura
@@ -598,6 +600,74 @@ Responde SOLO con el JSON, sin texto adicional.";
             {
                 _logger.LogWarning(ex, "Error al generar imagen para examen grupal");
                 return "";
+            }
+        }
+        private async Task<string> GenerarImagenConIAAsync(string promptTexto, string subFolder)
+        {
+            try
+            {
+                _logger.LogInformation("🎨 Iniciando generación de imagen con Pollinations AI (Modelo FLUX)");
+
+                var encodedPrompt = Uri.EscapeDataString(promptTexto);
+                var apiUrl = $"https://image.pollinations.ai/prompt/{encodedPrompt}?width=800&height=600&model=flux&nologo=true";
+                
+                int maxRetries = 3;
+                for (int attempt = 0; attempt < maxRetries; attempt++)
+                {
+                    try 
+                    {
+                        _logger.LogInformation("📤 Solicitando imagen a Pollinations AI (Intento {Attempt})", attempt + 1);
+                        var response = await _httpClient.GetAsync(apiUrl);
+                        
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            var errorContent = await response.Content.ReadAsStringAsync();
+                            _logger.LogError("❌ Error con Pollinations AI - StatusCode: {StatusCode}", response.StatusCode);
+                            await Task.Delay(2000);
+                            continue;
+                        }
+
+                        var imageBytes = await response.Content.ReadAsByteArrayAsync();
+                        
+                        if (imageBytes.Length == 0) {
+                            _logger.LogError("❌ La imagen recibida está vacía.");
+                            await Task.Delay(2000);
+                            continue;
+                        }
+
+                        _logger.LogInformation("✅ Imagen recibida, tamaño: {Size} bytes", imageBytes.Length);
+                        
+                        var wwwroot = _environment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                        var imagesFolder = Path.Combine(wwwroot, "images", subFolder);
+                        
+                        if (!Directory.Exists(imagesFolder))
+                        {
+                            Directory.CreateDirectory(imagesFolder);
+                        }
+
+                        var fileName = $"{subFolder}_{Guid.NewGuid()}.png";
+                        var imagePath = Path.Combine(imagesFolder, fileName);
+                        
+                        await File.WriteAllBytesAsync(imagePath, imageBytes);
+                        _logger.LogInformation("💾 Imagen guardada en: {ImagePath}", imagePath);
+                        
+                        return $"/images/{subFolder}/{fileName}";
+                    }
+                    catch (Exception loopEx)
+                    {
+                        _logger.LogError(loopEx, "Error en intento {Attempt}", attempt + 1);
+                        if (attempt == maxRetries - 1) return string.Empty;
+                        await Task.Delay(2000);
+                    }
+                }
+
+                _logger.LogError("❌ Se agotaron los reintentos para generar la imagen.");
+                return string.Empty;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "❌ Error general al generar/guardar la imagen.");
+                return string.Empty;
             }
         }
     }
