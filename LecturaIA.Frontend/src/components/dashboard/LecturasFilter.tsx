@@ -1,3 +1,4 @@
+import { Search, Filter, BookType } from 'lucide-react';
 
 interface LecturasFilterProps {
   searchTerm: string;
@@ -6,7 +7,7 @@ interface LecturasFilterProps {
   setFilterTipo: (tipo: string) => void;
   filterNivel: string;
   setFilterNivel: (nivel: string) => void;
-  onGenerarLectura: () => void;
+  onGenerarLectura?: () => void; // Made optional since it's in the top banner now
 }
 
 export default function LecturasFilter({
@@ -15,68 +16,67 @@ export default function LecturasFilter({
   filterTipo,
   setFilterTipo,
   filterNivel,
-  setFilterNivel,
-  onGenerarLectura
+  setFilterNivel
 }: LecturasFilterProps) {
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="flex flex-col lg:flex-row gap-4">
-        {/* Buscador */}
-        <div className="flex-1">
-          <div className="relative">
-            <svg className="absolute left-3 top-3 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Buscar lecturas..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
+    <div className="flex flex-col lg:flex-row gap-4 items-center">
+      {/* Buscador */}
+      <div className="flex-1 w-full">
+        <div className="relative">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+            <Search className="w-6 h-6" />
           </div>
+          <input
+            type="text"
+            placeholder="Buscar lecturas divertidas..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-14 pr-6 py-4 bg-slate-50 border-2 border-slate-200 text-slate-700 font-bold rounded-[20px] focus:outline-none focus:border-primary focus:bg-white transition-all shadow-inner text-lg placeholder:text-slate-400 placeholder:font-medium"
+          />
         </div>
+      </div>
 
+      <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
         {/* Filtro por tipo */}
-        <div>
+        <div className="relative flex-1 sm:flex-none sm:w-[220px]">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+            <BookType className="w-5 h-5" />
+          </div>
           <select
             value={filterTipo}
             onChange={(e) => setFilterTipo(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-12 pr-10 py-4 bg-slate-50 border-2 border-slate-200 text-slate-700 font-bold rounded-[20px] focus:outline-none focus:border-secondary focus:bg-white transition-all shadow-inner appearance-none cursor-pointer"
           >
-            <option value="todos">Todos los tipos</option>
+            <option value="todos">Todos los Tipos</option>
             <option value="Narrativa">Narrativa</option>
             <option value="Descriptiva">Descriptiva</option>
             <option value="Argumentativa">Argumentativa</option>
             <option value="Expositiva">Expositiva</option>
             <option value="Informativa">Informativa</option>
           </select>
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+          </div>
         </div>
 
         {/* Filtro por longitud */}
-        <div>
+        <div className="relative flex-1 sm:flex-none sm:w-[220px]">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+            <Filter className="w-5 h-5" />
+          </div>
           <select
             value={filterNivel}
             onChange={(e) => setFilterNivel(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-12 pr-10 py-4 bg-slate-50 border-2 border-slate-200 text-slate-700 font-bold rounded-[20px] focus:outline-none focus:border-secondary focus:bg-white transition-all shadow-inner appearance-none cursor-pointer"
           >
-            <option value="todos">Todas las longitudes</option>
+            <option value="todos">Cualquier Longitud</option>
             <option value="Corta">Corta</option>
             <option value="Mediana">Mediana</option>
             <option value="Larga">Larga</option>
           </select>
-        </div>
-
-        {/* Botón Generar Nueva Lectura */}
-        <div>
-          <button
-            onClick={onGenerarLectura}
-            className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition whitespace-nowrap"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            <span>Generar Nueva Lectura</span>
-          </button>
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+          </div>
         </div>
       </div>
     </div>

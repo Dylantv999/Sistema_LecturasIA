@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { lecturaService, getImageUrl, type LecturaGenerada } from '../services/lecturaService';
 import { sesionLecturaService } from '../services/sesionLecturaService';
+import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
+import { ArrowLeft, Clock, Moon, Sun, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function LecturaVistaLectura() {
   const { id } = useParams<{ id: string }>();
@@ -18,6 +21,16 @@ export default function LecturaVistaLectura() {
   const [terminando, setTerminando] = useState(false);
   const [mostrarFelicitaciones, setMostrarFelicitaciones] = useState(false);
 
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Scroll Progress Bar
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
   useEffect(() => {
     cargarLecturaEIniciarSesion();
   }, [id]);
@@ -25,26 +38,37 @@ export default function LecturaVistaLectura() {
   // Timer de lectura
   useEffect(() => {
     if (!tiempoInicio) return;
-
     const intervalo = setInterval(() => {
       const ahora = new Date();
       const segundos = Math.floor((ahora.getTime() - tiempoInicio.getTime()) / 1000);
       setTiempoTranscurrido(segundos);
     }, 1000);
-
     return () => clearInterval(intervalo);
   }, [tiempoInicio]);
+
+  // Apply dark mode to body to ensure full screen coverage for this route
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('bg-slate-900');
+      document.body.classList.remove('bg-slate-50');
+    } else {
+      document.body.classList.remove('bg-slate-900');
+      document.body.classList.add('bg-slate-50');
+    }
+    return () => {
+      document.body.classList.remove('bg-slate-900');
+      document.body.classList.add('bg-slate-50');
+    };
+  }, [isDarkMode]);
 
   const cargarLecturaEIniciarSesion = async () => {
     try {
       setLoading(true);
       const data = await lecturaService.obtenerLectura(Number(id));
       setLectura(data);
-
       const sesion = await sesionLecturaService.iniciarLectura(Number(id));
       setSesionId(sesion.id);
       setTiempoInicio(new Date());
-
       setLoading(false);
     } catch (err: any) {
       console.error('Error completo:', err);
@@ -55,12 +79,10 @@ export default function LecturaVistaLectura() {
 
   const handleTerminarLectura = async () => {
     if (!sesionId || !tiempoInicio) return;
-
     try {
       setTerminando(true);
       const tiempoFin = new Date();
       const tiempoMinutos = (tiempoFin.getTime() - tiempoInicio.getTime()) / 60000;
-
       await sesionLecturaService.finalizarLectura(sesionId, tiempoMinutos);
       setMostrarFelicitaciones(true);
     } catch (err: any) {
@@ -75,32 +97,22 @@ export default function LecturaVistaLectura() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-sky-50/50 flex items-center justify-center">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="w-12 h-12 border-4 border-sky-600 border-t-transparent rounded-full animate-spin"></div>
-          <div className="text-lg font-medium text-sky-800">Cargando lectura...</div>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-16 h-16 border-8 border-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-sky-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl shadow-xl p-8 max-w-md w-full text-center border border-sky-100">
-          <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-          </div>
-          <h2 className="text-2xl font-bold text-sky-950 mb-2">Error</h2>
-          <p className="text-sky-800 mb-6">{error}</p>
-          <button
-            onClick={() => navigate('/estudiante/dashboard')}
-            className="w-full bg-sky-600 text-white py-3 px-6 rounded-full font-bold hover:bg-sky-700 transition shadow-md shadow-sky-100"
-          >
-            Volver al Dashboard
-          </button>
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="bg-white rounded-[24px] shadow-xl p-8 max-w-md w-full text-center">
+          <div className="text-6xl mb-4">😢</div>
+          <h2 className="text-2xl font-black text-slate-800 mb-2">¡Ups! Hubo un problema</h2>
+          <p className="text-slate-600 mb-6 font-medium">{error}</p>
+          <Button onClick={() => navigate('/estudiante/dashboard')} size="lg" className="w-full">
+            Volver al Inicio
+          </Button>
         </div>
       </div>
     );
@@ -108,139 +120,144 @@ export default function LecturaVistaLectura() {
 
   if (!lectura) return null;
 
-  // Modal de felicitaciones (Mantiene su tamaño controlado)
   if (mostrarFelicitaciones) {
     return (
-      <div className="min-h-screen bg-sky-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl shadow-xl p-10 max-w-xl w-full text-center border border-sky-100 animate-fade-in flex flex-col items-center">
-          <div className="text-6xl mb-4 animate-bounce">🎉</div>
-          <h2 className="text-3xl font-black text-sky-950 mb-3">¡Excelente trabajo!</h2>
-          <p className="text-lg text-sky-800 mb-1">Has terminado de leer la historia</p>
-          <p className="text-xl font-bold text-sky-600 mb-8 max-w-md">"{lectura.titulo}"</p>
+      <div className="min-h-screen bg-gradient-to-br from-primary to-blue-400 flex items-center justify-center p-4">
+        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white rounded-[32px] shadow-2xl p-10 max-w-xl w-full text-center relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-secondary/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3"></div>
+          
+          <motion.div initial={{ y: -20 }} animate={{ y: 0 }} transition={{ repeat: Infinity, repeatType: "reverse", duration: 1 }} className="text-7xl mb-6">🏆</motion.div>
+          <h2 className="text-4xl font-black text-slate-800 mb-3">¡Lectura Completada!</h2>
+          <p className="text-xl text-slate-600 mb-2 font-medium">Has terminado de leer:</p>
+          <p className="text-2xl font-black text-primary mb-8 leading-tight">"{lectura.titulo}"</p>
 
-          <div className="bg-sky-50/80 rounded-2xl p-6 mb-8 w-full border border-sky-100/50">
-            <p className="text-sky-900 font-bold mb-2">¿Listo para poner a prueba tu comprensión?</p>
-            <p className="text-sm text-sky-700">Responde el cuestionario personalizado generado por la IA.</p>
+          <div className="bg-slate-50 rounded-[24px] p-6 mb-8 border-2 border-slate-100">
+            <p className="text-slate-800 font-bold text-lg mb-2">¿Listo para el desafío? 🧠</p>
+            <p className="text-slate-500 font-medium">Responde el cuestionario para ganar tus recompensas.</p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full">
-            <button
-              onClick={() => navigate('/estudiante/dashboard')}
-              className="flex-1 px-6 py-3.5 border-2 border-sky-200 text-sky-700 font-bold rounded-full hover:bg-sky-50 transition text-sm"
-            >
-              Volver al Dashboard
-            </button>
-            <button
-              onClick={handleComenzarCuestionario}
-              className="flex-1 px-6 py-3.5 bg-gradient-to-r from-sky-600 to-cyan-500 text-white font-bold rounded-full hover:from-sky-700 hover:to-cyan-600 transition shadow-md shadow-sky-100 text-sm"
-            >
-              Comenzar Cuestionario →
-            </button>
+            <Button onClick={() => navigate('/estudiante/dashboard')} variant="outline" size="lg" className="flex-1 py-6 text-lg border-2 rounded-[24px]">
+              Más tarde
+            </Button>
+            <Button onClick={handleComenzarCuestionario} size="lg" className="flex-1 py-6 text-lg bg-secondary hover:bg-orange-500 text-white rounded-[24px]">
+              ¡Comenzar Desafío!
+            </Button>
           </div>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-sky-50/40 pb-16">
-      {/* Barra superior de control - Ancho Expandido a max-w-5xl */}
-      <div className="max-w-5xl mx-auto px-4 pt-8 mb-6 flex justify-between items-center">
-        <button
-          onClick={() => navigate('/estudiante/dashboard')}
-          className="text-sky-700 hover:text-sky-900 font-bold flex items-center gap-2 text-sm transition"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Volver al Dashboard
-        </button>
+    <div className={`min-h-screen transition-colors duration-500 pb-20 font-body ${isDarkMode ? 'bg-slate-900 text-slate-200' : 'bg-slate-50/80 text-slate-800'}`}>
+      
+      {/* Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-2 bg-secondary z-[60] origin-left"
+        style={{ scaleX }}
+      />
+      
+      {/* Top Navigation Bar - Immersive and minimal */}
+      <div className={`sticky top-0 z-50 backdrop-blur-md transition-colors duration-300 ${isDarkMode ? 'bg-slate-900/80 border-slate-800' : 'bg-white/80 border-slate-200'} border-b px-4 py-3`}>
+        <div className="max-w-4xl mx-auto flex justify-between items-center">
+          <button
+            onClick={() => navigate('/estudiante/dashboard')}
+            className={`flex items-center gap-2 font-bold px-4 py-2 rounded-[16px] transition-colors ${isDarkMode ? 'hover:bg-slate-800 text-slate-300' : 'hover:bg-slate-100 text-slate-600'}`}
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="hidden sm:inline">Volver</span>
+          </button>
 
-        {/* Indicador de tiempo flotante y limpio */}
-        {tiempoInicio && (
-          <div className="bg-white border border-sky-100 text-sky-700 font-mono text-sm font-bold py-2 px-4 rounded-full shadow-sm flex items-center gap-2">
-            <span>⏱️</span>
-            <span>
-              {String(Math.floor(tiempoTranscurrido / 60)).padStart(2, '0')}:
-              {String(tiempoTranscurrido % 60).padStart(2, '0')}
-            </span>
-          </div>
-        )}
-      </div>
-
-      <div className="max-w-5xl mx-auto px-4">
-        {/* Contenedor Principal sin scroll interno */}
-        <div className="bg-white rounded-3xl shadow-sm border border-sky-100 overflow-hidden">
-
-          {/* Cabecera del Texto */}
-          <div className="bg-gradient-to-r from-sky-600 to-cyan-500 text-white p-8 md:p-12 text-center">
-            <h1 className="text-3xl md:text-5xl font-black tracking-tight mb-4 leading-tight max-w-4xl mx-auto">
-              {lectura.titulo}
-            </h1>
-            <span className="inline-flex items-center gap-1.5 bg-white/10 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-sm border border-white/10">
-              📖 {lectura.tipoLectura}
-            </span>
-          </div>
-
-          {/* Área de Imagen Optimizada */}
-          {lectura.urlImagen && (
-            <div className="flex justify-center p-6 md:p-8 bg-sky-50/30 border-b border-sky-50">
-              <div className="max-w-3xl w-full overflow-hidden rounded-2xl shadow-sm border border-white bg-white">
-                <img
-                  src={getImageUrl(lectura.urlImagen)}
-                  alt={lectura.titulo}
-                  className="w-full h-auto object-cover max-h-[450px]"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250"><rect fill="%23f0f9ff"/><text x="50%" y="50%" text-anchor="middle" fill="%230ea5e9" font-family="sans-serif" font-weight="bold" font-size="16">LecturaIA - Ilustración del texto</text></svg>';
-                  }}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Caja de Texto - AHORA CRECE DE FORMA NATURAL CON LA PÁGINA */}
-          <div className="p-8 md:p-14 bg-white">
-            <div className="max-w-4xl mx-auto">
-              {lectura.contenido.split('\n\n').map((parrafo, i) => (
-                <p
-                  key={`${i}-${parrafo.substring(0, 10)}`}
-                  className="text-lg md:text-xl font-normal leading-relaxed mb-6 text-justify text-slate-700 tracking-wide"
-                >
-                  {parrafo}
-                </p>
-              ))}
-            </div>
-          </div>
-
-          {/* Footer de Metadatos y Acción */}
-          <div className="bg-sky-50/50 p-6 md:p-10 border-t border-sky-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div className="flex gap-4 text-xs font-bold text-sky-800/80 uppercase tracking-wider text-center sm:text-left">
-              <span className="bg-white border border-sky-100 px-4 py-2 rounded-xl shadow-2xs">📝 {lectura.preferencias.longitud}</span>
-              <span className="bg-white border border-sky-100 px-4 py-2 rounded-xl shadow-2xs">😊 {lectura.preferencias.emocion}</span>
-            </div>
-
-            <button
-              onClick={handleTerminarLectura}
-              disabled={terminando}
-              className={`
-                w-full sm:w-auto px-10 py-4 rounded-full text-base font-bold text-white shadow-md shadow-sky-100 transition-all duration-200
-                ${terminando
-                  ? 'bg-sky-300 cursor-not-allowed shadow-none'
-                  : 'bg-sky-600 hover:bg-sky-700 active:scale-98'
-                }
-              `}
-            >
-              {terminando ? (
-                <span className="flex items-center justify-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Procesando...
+          <div className="flex items-center gap-4">
+            {tiempoInicio && (
+              <div className={`flex items-center gap-2 px-4 py-2 rounded-[16px] font-mono font-bold ${isDarkMode ? 'bg-slate-800 text-tertiary' : 'bg-green-50 text-tertiary'}`}>
+                <Clock className="w-5 h-5" />
+                <span className="text-lg">
+                  {String(Math.floor(tiempoTranscurrido / 60)).padStart(2, '0')}:
+                  {String(tiempoTranscurrido % 60).padStart(2, '0')}
                 </span>
-              ) : (
-                '✓ Terminar Lectura'
-              )}
+              </div>
+            )}
+            
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className={`p-3 rounded-full transition-colors ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}`}
+              aria-label="Toggle Dark Mode"
+            >
+              <AnimatePresence mode="wait">
+                <motion.div key={isDarkMode ? 'dark' : 'light'} initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                  {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                </motion.div>
+              </AnimatePresence>
             </button>
           </div>
         </div>
+      </div>
+
+      <div className="max-w-3xl mx-auto px-4 mt-8 md:mt-12">
+        {/* Title Area */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
+          <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wider mb-6 ${isDarkMode ? 'bg-primary/20 text-blue-300' : 'bg-primary/10 text-primary'}`}>
+            📖 {lectura.tipoLectura}
+          </span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight mb-8">
+            {lectura.titulo}
+          </h1>
+        </motion.div>
+
+        {/* Image Area */}
+        {lectura.urlImagen && (
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="mb-12 rounded-[32px] overflow-hidden shadow-xl border-4 border-white/10">
+            <img
+              src={getImageUrl(lectura.urlImagen)}
+              alt={lectura.titulo}
+              className="w-full h-auto max-h-[500px] object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none';
+              }}
+            />
+          </motion.div>
+        )}
+
+        {/* Reading Content Area */}
+        <div className={`px-2 sm:px-6 md:px-0 font-body text-[22px] leading-[1.8] font-medium tracking-wide ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+          {lectura.contenido.split('\n\n').map((parrafo, i) => (
+            <motion.p
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 + (i * 0.1) }}
+              className="mb-8"
+            >
+              {parrafo}
+            </motion.p>
+          ))}
+        </div>
+
+        {/* Finish Button */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-16 text-center">
+          <Button
+            onClick={handleTerminarLectura}
+            disabled={terminando}
+            size="lg"
+            className={`w-full sm:w-auto px-12 py-8 text-2xl rounded-[32px] font-black transition-all transform hover:scale-105 shadow-xl ${
+              isDarkMode ? 'bg-secondary text-white hover:bg-orange-500' : 'bg-secondary text-white hover:bg-orange-500'
+            }`}
+          >
+            {terminando ? (
+              <span className="flex items-center gap-3">
+                <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                Guardando...
+              </span>
+            ) : (
+              <span className="flex items-center gap-3">
+                Continuar
+                <ArrowRight className="w-8 h-8" />
+              </span>
+            )}
+          </Button>
+        </motion.div>
       </div>
     </div>
   );

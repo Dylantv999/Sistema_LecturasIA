@@ -1,4 +1,7 @@
 import { useNavigate } from 'react-router-dom';
+import SplitText from '@/components/SplitText';
+import FadeContent from '@/components/FadeContent';
+import ShinyText from '@/components/ShinyText';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -7,13 +10,18 @@ export default function Home() {
     <div className="min-h-screen bg-sky-50 flex items-center justify-center p-4">
       <div className="max-w-4xl w-full">
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-sky-900 mb-4">LecturaIA</h1>
+          <SplitText
+            text="LecturaIA"
+            className="text-5xl font-bold text-sky-900 mb-4"
+            delay={50}
+          />
           <p className="text-xl text-sky-800">Sistema Educativo de Comprensión Lectora</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* Acceso para Estudiantes */}
-          <div className="bg-white rounded-3xl shadow-lg p-10 transform transition hover:scale-105 border border-sky-100 flex flex-col items-center">
+          <FadeContent blur duration={1} ease="ease-out" initialOpacity={0} delay={200}>
+          <div className="bg-white rounded-3xl shadow-lg p-10 transform transition hover:scale-105 border border-sky-100 flex flex-col items-center h-full">
             <div className="text-center mb-6">
               <div className="w-36 h-36 rounded-full flex items-center justify-center mx-auto mb-6 overflow-hidden bg-sky-100 border-4 border-white shadow-md">
                 <img
@@ -38,12 +46,14 @@ export default function Home() {
               onClick={() => navigate('/estudiante')}
               className="w-full bg-sky-600 text-white py-4 px-8 rounded-full font-bold text-lg hover:bg-sky-700 transition shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-sky-300"
             >
-              Acceso para Estudiantes
+              <ShinyText text="Acceso para Estudiantes" color="#e0f2fe" shineColor="#ffffff" speed={3} className="font-bold text-lg" />
             </button>
           </div>
+          </FadeContent>
 
           {/* Acceso para Docentes */}
-          <div className="bg-white rounded-3xl shadow-lg p-10 transform transition hover:scale-105 border border-sky-100 flex flex-col items-center">
+          <FadeContent blur duration={1} ease="ease-out" initialOpacity={0} delay={400}>
+          <div className="bg-white rounded-3xl shadow-lg p-10 transform transition hover:scale-105 border border-sky-100 flex flex-col items-center h-full">
             <div className="text-center mb-6">
               <div className="w-36 h-36 rounded-full flex items-center justify-center mx-auto mb-6 overflow-hidden bg-sky-100 border-4 border-white shadow-md">
                 <img
@@ -68,9 +78,10 @@ export default function Home() {
               onClick={() => navigate('/docente')}
               className="w-full bg-sky-600 text-white py-4 px-8 rounded-full font-bold text-lg hover:bg-sky-700 transition shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-sky-300"
             >
-              Acceso para Docentes
+              <ShinyText text="Acceso para Docentes" color="#e0f2fe" shineColor="#ffffff" speed={3} className="font-bold text-lg" />
             </button>
           </div>
+          </FadeContent>
         </div>
       </div>
     </div>
