@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import examenGrupalService from '../../services/examenGrupalService';
 import type { CrearExamenGrupalDto } from '../../services/examenGrupalService';
 import { TipoTexto, LongitudTexto, GradoEscolar, ComplejidadTexto } from '../../types/enums';
+import { AlertCircle, CheckCircle, FileText, Bot, BarChart2, Share2, Sparkles, Loader2, ArrowLeft } from 'lucide-react';
 
 const CrearExamenGrupal: React.FC = () => {
   const navigate = useNavigate();
@@ -88,30 +89,43 @@ const CrearExamenGrupal: React.FC = () => {
     <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto space-y-6">
         
+        {/* Botón Volver */}
+        <div>
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="flex items-center space-x-2 text-sm font-bold text-slate-500 hover:text-indigo-600 transition group cursor-pointer"
+          >
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            <span>Volver al Aula</span>
+          </button>
+        </div>
+
         {/* Encabezado */}
-        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-xs flex items-start space-x-4">
-          <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl text-2xl">
-            📝
+        <div className="bg-white border-2 border-slate-100 rounded-2xl p-6 shadow-sm flex items-start space-x-4 relative overflow-hidden group">
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+          <div className="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl shadow-md relative z-10">
+            <Sparkles className="w-8 h-8" />
           </div>
-          <div>
-            <h2 className="text-xl font-bold text-slate-800">Crear Examen Grupal con IA</h2>
-            <p className="text-sm text-slate-500 mt-1">
-              El examen se generará automáticamente y se asignará a todos los estudiantes del salón.
+          <div className="relative z-10">
+            <h2 className="text-2xl font-black text-slate-800 tracking-tight">Crear Examen Grupal con IA</h2>
+            <p className="text-sm font-medium text-slate-500 mt-1">
+              La Inteligencia Artificial redactará automáticamente una lectura única y generará preguntas de comprensión.
             </p>
           </div>
         </div>
 
         {/* Notificaciones de Estado */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-800 rounded-xl p-4 flex items-center space-x-2 text-sm font-medium shadow-xs">
-            <span>⚠️</span>
+          <div className="bg-rose-50 border border-rose-200 text-rose-800 rounded-xl p-4 flex items-center space-x-3 text-sm font-bold shadow-sm">
+            <AlertCircle className="w-5 h-5 text-rose-600" />
             <span>{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl p-4 flex items-center space-x-2 text-sm font-medium shadow-xs">
-            <span>✅</span>
+          <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl p-4 flex items-center space-x-3 text-sm font-bold shadow-sm">
+            <CheckCircle className="w-5 h-5 text-emerald-600" />
             <span>{success}</span>
           </div>
         )}
@@ -120,9 +134,10 @@ const CrearExamenGrupal: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           
           {/* Sección 1: Información General */}
-          <div className="bg-white border border-slate-100 rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
-            <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-100 pb-2">
-              📋 Información General
+          <div className="bg-white border-2 border-slate-100 rounded-2xl p-6 sm:p-8 shadow-sm space-y-5">
+            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center">
+              <FileText className="w-4 h-4 mr-2 text-slate-400" />
+              Información General
             </h3>
             
             <div className="space-y-1.5">
@@ -175,9 +190,11 @@ const CrearExamenGrupal: React.FC = () => {
           </div>
 
           {/* Sección 2: Parámetros de Generación con IA */}
-          <div className="bg-white border border-slate-100 rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
-            <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-100 pb-2">
-              🤖 Parámetros de Generación con IA
+          <div className="bg-white border-2 border-slate-100 rounded-2xl p-6 sm:p-8 shadow-sm space-y-5 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50/50 rounded-bl-[100px] -z-0"></div>
+            <h3 className="text-xs font-black text-indigo-600 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center relative z-10">
+              <Bot className="w-4 h-4 mr-2" />
+              Parámetros de Generación con IA
             </h3>
             
             <div className="space-y-1.5">
@@ -286,16 +303,18 @@ const CrearExamenGrupal: React.FC = () => {
                   <option key={cantidad} value={cantidad}>{cantidad} preguntas</option>
                 ))}
               </select>
-              <div className="inline-block bg-slate-50 text-xs font-medium text-slate-500 px-3 py-1.5 rounded-lg border border-slate-100">
-                📊 Distribución estándar: 40% literales, 40% inferenciales, 20% críticas
+              <div className="inline-flex items-center bg-indigo-50 text-[11px] font-bold text-indigo-700 px-3 py-1.5 rounded-lg border border-indigo-100">
+                <BarChart2 className="w-3.5 h-3.5 mr-1.5" />
+                Distribución estándar: 40% literales, 40% inferenciales, 20% críticas
               </div>
             </div>
           </div>
 
           {/* Sección 3: Opciones de Publicación */}
-          <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-xs space-y-3">
-            <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-100 pb-2">
-              📢 Opciones de Publicación
+          <div className="bg-white border-2 border-slate-100 rounded-2xl p-6 shadow-sm space-y-4">
+            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center">
+              <Share2 className="w-4 h-4 mr-2" />
+              Opciones de Publicación
             </h3>
             
             <div className="space-y-1">
@@ -330,17 +349,17 @@ const CrearExamenGrupal: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2.5 bg-slate-800 text-white text-xs font-semibold tracking-wide uppercase rounded-xl hover:bg-slate-900 active:bg-slate-950 transition shadow-xs disabled:opacity-50 flex items-center justify-center space-x-2 cursor-pointer"
+              className="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-bold tracking-widest uppercase rounded-xl hover:from-indigo-700 hover:to-purple-700 active:from-indigo-800 active:to-purple-800 transition shadow-md hover:shadow-lg disabled:opacity-50 flex items-center justify-center space-x-2 cursor-pointer"
             >
               {loading ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-b-transparent rounded-full animate-spin"></div>
-                  <span>Generando con IA...</span>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Generando Magia...</span>
                 </>
               ) : (
                 <>
-                  <span>🤖</span>
-                  <span>Crear Examen</span>
+                  <Sparkles className="w-4 h-4" />
+                  <span>Crear Examen con IA</span>
                 </>
               )}
             </button>
@@ -348,9 +367,14 @@ const CrearExamenGrupal: React.FC = () => {
 
           {/* Mensaje Informativo en Carga */}
           {loading && (
-            <div className="bg-emerald-50/60 border border-emerald-100 rounded-2xl p-5 text-center space-y-1 animate-pulse">
-              <p className="text-sm font-semibold text-emerald-800">⏳ Generando lectura y preguntas con Inteligencia Artificial...</p>
-              <p className="text-xs text-emerald-600/90">Esto puede tomar entre 10 y 30 segundos.</p>
+            <div className="bg-indigo-50/80 border border-indigo-200 rounded-2xl p-6 text-center space-y-2 animate-pulse shadow-sm">
+              <p className="text-sm font-black text-indigo-900 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 mr-2 text-indigo-600" />
+                Generando lectura y preguntas de alto nivel cognitivo...
+              </p>
+              <p className="text-xs font-semibold text-indigo-600/80">
+                La Inteligencia Artificial está trabajando. Esto puede tomar entre 10 y 30 segundos.
+              </p>
             </div>
           )}
         </form>

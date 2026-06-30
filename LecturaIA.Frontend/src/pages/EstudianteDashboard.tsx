@@ -216,7 +216,7 @@ export default function EstudianteDashboard() {
               </div>
 
               {/* User Dropdown */}
-              <div className="relative shrink-0">
+              <div className="relative shrink-0 tour-perfil-estudiante">
                 <button onClick={() => setShowMenuDropdown(!showMenuDropdown)} className="flex items-center space-x-2 sm:space-x-3 bg-white/10 hover:bg-white/20 p-1 sm:px-5 py-1 sm:py-3 rounded-full sm:rounded-[24px] transition-all border-2 border-white/20">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 bg-secondary text-white rounded-full flex items-center justify-center text-sm sm:text-lg font-black shadow-inner">
                     {user.nombreCompleto?.charAt(0).toUpperCase()}
@@ -260,13 +260,13 @@ export default function EstudianteDashboard() {
                   <Button onClick={() => navigate('/estudiante/examenes')} variant="secondary" size="lg" className="font-bold text-base sm:text-lg px-6 sm:px-8">
                     <Trophy className="w-5 h-5 mr-2" /> Mis Exámenes
                   </Button>
-                  <Button onClick={handleGenerarLectura} className="bg-white text-primary hover:bg-white/90 font-bold text-base sm:text-lg px-6 sm:px-8">
+                  <Button onClick={handleGenerarLectura} className="tour-nueva-lectura bg-white text-primary hover:bg-white/90 font-bold text-base sm:text-lg px-6 sm:px-8">
                     <Sparkles className="w-5 h-5 mr-2" /> Nueva Lectura
                   </Button>
                 </div>
               </div>
               <div className="flex flex-col gap-4 w-full md:min-w-[280px]">
-                <div className="bg-white/20 p-5 rounded-[24px] backdrop-blur-md border-2 border-white/20 flex flex-col gap-4">
+                <div className="bg-white/20 p-5 rounded-[24px] backdrop-blur-md border-2 border-white/20 flex flex-col gap-4 tour-metricas-estudiante">
                   <div className="flex items-center gap-5">
                     <div className="w-16 h-16 bg-secondary rounded-[16px] flex items-center justify-center rotate-3 shadow-lg">
                       <Star className="w-8 h-8 text-white" />

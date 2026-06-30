@@ -5,6 +5,7 @@ import { aulasService, type AulaDetalle, type EstudianteAula } from '../services
 import MetricasEstudianteModal from '../components/MetricasEstudianteModal';
 import MetricasSalonModal from '../components/MetricasSalonModal';
 import ListaExamenesAula from '../components/docente/ListaExamenesAula';
+import { AlertCircle, ArrowLeft, Copy, BarChart2, FilePlus, Users, FileText, User, LineChart, UserMinus, AlertTriangle } from 'lucide-react';
 
 export default function AulaDetalleDocente() {
   const { id } = useParams<{ id: string }>();
@@ -110,10 +111,8 @@ export default function AulaDetalleDocente() {
       <div className="min-h-screen bg-slate-50 p-8">
         <div className="max-w-4xl mx-auto">
           <div className="bg-red-50 border border-red-200 rounded-xl p-5">
-            <div className="flex items-center space-x-3 text-red-800">
-              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+            <div className="flex items-center space-x-3 text-rose-800">
+              <AlertCircle className="w-6 h-6 text-rose-600" />
               <span className="font-bold">{error || 'Aula no encontrada'}</span>
             </div>
           </div>
@@ -139,9 +138,7 @@ export default function AulaDetalleDocente() {
                 onClick={() => navigate('/docente/dashboard')}
                 className="p-2.5 hover:bg-white/10 rounded-xl transition border border-transparent hover:border-white/10"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
+                <ArrowLeft className="w-5 h-5" />
               </button>
               <div>
                 <h1 className="text-2xl md:text-3xl font-black tracking-tight">{aula.nombre}</h1>
@@ -168,9 +165,7 @@ export default function AulaDetalleDocente() {
                   className="p-2 bg-slate-50 border border-slate-100 rounded-xl text-slate-500 hover:text-emerald-600 hover:border-emerald-200 transition shadow-3xs"
                   title="Copiar código"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
+                  <Copy className="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -208,9 +203,7 @@ export default function AulaDetalleDocente() {
             onClick={() => setShowMetricasSalon(true)}
             className="flex-1 sm:flex-initial px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition shadow-sm font-bold text-xs flex items-center justify-center space-x-2"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
+            <BarChart2 className="w-4 h-4" />
             <span>Ver Métricas del Salón</span>
           </button>
           
@@ -218,9 +211,7 @@ export default function AulaDetalleDocente() {
             onClick={() => navigate(`/docente/aula/${id}/examen/crear`)}
             className="flex-1 sm:flex-initial px-5 py-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-900 transition shadow-sm font-bold text-xs flex items-center justify-center space-x-2"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
+            <FilePlus className="w-4 h-4" />
             <span>Crear Examen Grupal</span>
           </button>
         </div>
@@ -236,9 +227,7 @@ export default function AulaDetalleDocente() {
                   : 'border-transparent text-slate-400 hover:text-slate-600 hover:border-slate-300 font-bold'
               } whitespace-nowrap py-3.5 px-1 border-b-2 text-xs uppercase tracking-wider flex items-center space-x-2 transition`}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
+              <Users className="w-4 h-4" />
               <span>Estudiantes ({estudiantes.length})</span>
             </button>
             
@@ -250,9 +239,7 @@ export default function AulaDetalleDocente() {
                   : 'border-transparent text-slate-400 hover:text-slate-600 hover:border-slate-300 font-bold'
               } whitespace-nowrap py-3.5 px-1 border-b-2 text-xs uppercase tracking-wider flex items-center space-x-2 transition`}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+              <FileText className="w-4 h-4" />
               <span>Exámenes</span>
             </button>
           </nav>
@@ -275,9 +262,7 @@ export default function AulaDetalleDocente() {
             ) : estudiantes.length === 0 ? (
               <div className="p-16 text-center max-w-md mx-auto">
                 <div className="bg-emerald-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-100 shadow-3xs">
-                  <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
+                  <Users className="w-6 h-6 text-emerald-600" />
                 </div>
                 <h3 className="text-lg font-black text-slate-800 mb-1">No hay alumnos aún</h3>
                 <p className="text-slate-500 text-sm">
@@ -302,9 +287,7 @@ export default function AulaDetalleDocente() {
                         <td className="px-6 py-3.5 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-9 w-9 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center justify-center">
-                              <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                              </svg>
+                              <User className="w-5 h-5 text-emerald-600" />
                             </div>
                             <div className="ml-3.5">
                               <div className="text-sm font-bold text-slate-800">{estudiante.nombreCompleto}</div>
@@ -328,7 +311,6 @@ export default function AulaDetalleDocente() {
                         </td>
                         <td className="px-6 py-3.5 whitespace-nowrap text-right">
                           <div className="flex items-center justify-end space-x-1">
-                            {/* Botón Ver Métricas */}
                             <button
                               onClick={() => {
                                 setEstudianteSeleccionado({
@@ -340,19 +322,15 @@ export default function AulaDetalleDocente() {
                               className="text-emerald-600 hover:text-emerald-700 p-2 bg-white hover:bg-emerald-50 border border-transparent hover:border-emerald-100 rounded-xl transition shadow-3xs"
                               title="Ver métricas"
                             >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                              </svg>
+                              <LineChart className="w-4 h-4" />
                             </button>
                             {/* Botón Remover */}
                             <button
                               onClick={() => setEstudianteAEliminar(estudiante)}
-                              className="text-slate-400 hover:text-red-600 p-2 bg-white hover:bg-red-50 border border-transparent hover:border-red-100 rounded-xl transition shadow-3xs"
+                              className="text-slate-400 hover:text-rose-600 p-2 bg-white hover:bg-rose-50 border border-transparent hover:border-rose-100 rounded-xl transition shadow-3xs"
                               title="Remover estudiante"
                             >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                              </svg>
+                              <UserMinus className="w-4 h-4" />
                             </button>
                           </div>
                         </td>
@@ -371,10 +349,8 @@ export default function AulaDetalleDocente() {
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 border border-slate-100">
             <div className="flex items-start space-x-3.5 mb-4">
-              <div className="flex-shrink-0 w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center">
-                <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
+              <div className="flex-shrink-0 w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center border border-rose-100">
+                <AlertTriangle className="w-5 h-5 text-rose-600" />
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="text-lg font-black text-slate-900">Remover Estudiante</h3>

@@ -97,69 +97,75 @@ export const contenidoAyuda = {
 
 export const tutorialEstudiante = [
   {
+    target: 'body',
     numero: 1,
     titulo: '¡Bienvenido a tu Dashboard! 📊',
     descripcion: 'Este es tu espacio personal. Aquí verás tu progreso, lecturas recientes y estadísticas. La tarjeta principal muestra información de tu clase actual y tu nivel de dificultad.'
   },
   {
+    target: '.tour-perfil-estudiante',
     numero: 2,
-    titulo: 'Generar Nueva Lectura 📚',
-    descripcion: 'Haz clic en el botón "Nueva Lectura" para que el sistema genere un texto personalizado según tu nivel. Cada lectura viene con un cuestionario para evaluar tu comprensión.'
+    titulo: 'Tu Perfil y Nivel 🦸‍♂️',
+    descripcion: '¡Este eres tú! Aquí verás tu nivel actual. Acumula XP leyendo para subir de rango y desbloquear nuevas medallas.'
   },
   {
+    target: '.tour-nueva-lectura',
     numero: 3,
-    titulo: 'Responder Cuestionarios ✍️',
-    descripcion: 'Después de leer, responde el cuestionario. Las preguntas evalúan tres niveles: literal (datos del texto), analítico (inferencias) y crítico (opiniones y juicios). ¡Tómate tu tiempo!'
+    titulo: 'Comienza tu Aventura 📚',
+    descripcion: 'Haz clic en "Nueva Lectura" para generar una historia mágica. Después de leerla, podrás responder un cuestionario para ganar XP y Monedas.'
   },
   {
+    target: '.tour-metricas-estudiante',
     numero: 4,
-    titulo: 'Tu Perfil y Configuración ⚙️',
-    descripcion: 'Desde el menú de tu nombre (arriba a la derecha) puedes ver tu perfil, unirte a una clase con el código de tu docente, cambiar tu contraseña y cerrar sesión.'
+    titulo: 'Sigue tu Progreso 🏆',
+    descripcion: 'Estas tarjetas muestran todas tus victorias: lecturas completadas, nivel y tu racha de aprendizaje.'
   }
 ];
 
 export const tutorialDocente = [
   {
+    target: 'body',
     numero: 1,
     titulo: '¡Bienvenido al Panel Docente! 👨‍🏫',
-    descripcion: 'Desde aquí gestionas tus aulas y monitoreas el progreso de tus estudiantes. Las tarjetas superiores muestran resúmenes importantes de tu actividad docente.'
+    descripcion: 'Desde aquí gestionas tus aulas y monitoreas el progreso de tus estudiantes. Te daremos un breve recorrido por las herramientas principales.'
   },
   {
+    target: '.tour-resumen-metricas',
     numero: 2,
-    titulo: 'Crear y Gestionar Aulas 🏫',
-    descripcion: 'Haz clic en "Mis Aulas" para ver todas tus clases. Cada aula tiene un código único de 6 caracteres que compartes con tus estudiantes para que se unan.'
+    titulo: 'Resumen Global 📈',
+    descripcion: 'Estas tarjetas te dan un panorama rápido: total de estudiantes, aulas activas y la cantidad de lecturas que ha generado tu IA.'
   },
   {
+    target: '.tour-crear-aula',
     numero: 3,
-    titulo: 'Monitorear Estudiantes 📈',
-    descripcion: 'Dentro de cada aula puedes ver métricas detalladas de cada estudiante: lecturas completadas, promedio de calificaciones, tipos de texto favoritos y más.'
+    titulo: '¡Crea tu Primer Aula! 🏫',
+    descripcion: 'Con este botón podrás generar un nuevo grupo. Recibirás un código mágico de 6 dígitos para invitar a tus alumnos.'
   },
   {
+    target: '.tour-mis-aulas',
     numero: 4,
-    titulo: 'Análisis y Reportes 📊',
-    descripcion: 'Usa las estadísticas para identificar fortalezas y áreas de mejora. Puedes ver el rendimiento por tipo de texto (narrativo, descriptivo, expositivo, etc.) y tipo de pregunta.'
+    titulo: 'Gestión de Aulas 📚',
+    descripcion: 'Una vez creadas, tus aulas aparecerán aquí. Haz clic en cualquiera para ver el progreso detallado de cada niño o para generar Exámenes Grupales con IA.'
   }
 ];
 
 export const tutorialAdmin = [
   {
+    target: 'body',
     numero: 1,
     titulo: 'Panel de Administración 🛡️',
     descripcion: 'Como administrador, tienes acceso completo al sistema. Puedes gestionar usuarios, ver estadísticas globales y mantener la plataforma funcionando correctamente.'
   },
   {
+    target: '.tour-admin-metricas',
     numero: 2,
-    titulo: 'Gestión de Usuarios 👥',
-    descripcion: 'En la sección de usuarios puedes buscar por email, suspender cuentas con un motivo, reactivar usuarios suspendidos y reiniciar contraseñas cuando sea necesario.'
-  },
-  {
-    numero: 3,
     titulo: 'Estadísticas del Sistema 📊',
-    descripcion: 'Monitorea métricas clave: total de usuarios (estudiantes, docentes, admins), usuarios activos, lecturas generadas, cuestionarios completados y aulas activas.'
+    descripcion: 'Monitorea métricas clave de toda la plataforma en tiempo real.'
   },
   {
-    numero: 4,
-    titulo: 'Seguridad y Auditoría 🔒',
-    descripcion: 'Todas las acciones administrativas quedan registradas con fecha, hora y motivo. Revisa regularmente las actividades sospechosas y mantén la plataforma segura.'
+    target: '.tour-admin-usuarios',
+    numero: 3,
+    titulo: 'Gestión de Usuarios 👥',
+    descripcion: 'Busca, suspende o reactiva cuentas desde este panel central.'
   }
 ];
