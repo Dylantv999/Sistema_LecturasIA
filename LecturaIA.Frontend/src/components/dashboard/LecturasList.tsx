@@ -102,11 +102,11 @@ export default function LecturasList({
             </div>
 
             <CardContent className="p-6 flex-1 flex flex-col pt-4">
-              <div className="flex items-center gap-2 mb-3">
-                <span className={`px-3 py-1 rounded-full text-xs font-black uppercase border-2 ${getEstadoColor(lectura.estado)}`}>
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <span className={`px-3 py-1 rounded-full text-[10px] sm:text-xs font-black uppercase border-2 ${getEstadoColor(lectura.estado)}`}>
                   {getEstadoTexto(lectura.estado)}
                 </span>
-                <span className="px-3 py-1 rounded-full text-xs font-black uppercase bg-slate-100 text-slate-500 border-2 border-slate-200">
+                <span className="px-3 py-1 rounded-full text-[10px] sm:text-xs font-black uppercase bg-slate-100 text-slate-500 border-2 border-slate-200">
                   {lectura.tipoLectura}
                 </span>
               </div>
@@ -157,13 +157,13 @@ export default function LecturasList({
 
                 <div className="flex gap-2 mt-2">
                   {lectura.estado === 'completado' && (
-                    <Button onClick={() => onComenzarLectura(lectura.id)} variant="outline" className="flex-1 font-bold h-10 rounded-[12px] border-2">
+                    <Button onClick={() => onComenzarLectura(lectura.id)} variant="outline" className="flex-1 font-bold h-11 rounded-[12px] border-2">
                       <RefreshCcw className="w-4 h-4 mr-2" /> Releer
                     </Button>
                   )}
                   {lectura.cuestionarioEvaluado && (
-                    <Button onClick={() => navigate(`/estudiante/lectura/${lectura.id}/historial`)} variant="outline" className="flex-1 font-bold h-10 rounded-[12px] border-2">
-                      <History className="w-4 h-4 mr-2" /> Historial
+                    <Button onClick={() => navigate(`/estudiante/lectura/${lectura.id}/historial`)} variant="outline" title="Ver Historial" className="w-11 h-11 p-0 flex-shrink-0 font-bold rounded-[12px] border-2 flex items-center justify-center">
+                      <History className="w-5 h-5 text-slate-600" />
                     </Button>
                   )}
                 </div>

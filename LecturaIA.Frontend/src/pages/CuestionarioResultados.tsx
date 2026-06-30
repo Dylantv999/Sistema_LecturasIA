@@ -40,9 +40,11 @@ export default function CuestionarioResultados() {
               const parsed = JSON.parse(storedData);
               parsed.xp = (parsed.xp || 1250) + calculoXp;
               parsed.monedas = (parsed.monedas || 300) + calculoMonedas;
+              parsed.nivel = Math.floor(parsed.xp / 250);
               localStorage.setItem(`gamification_${user.id}`, JSON.stringify(parsed));
             } else {
-              const defaultData = { xp: 1250 + calculoXp, monedas: 300 + calculoMonedas, nivel: 5, racha: 3 };
+              const xpNuevo = 1250 + calculoXp;
+              const defaultData = { xp: xpNuevo, monedas: 300 + calculoMonedas, nivel: Math.floor(xpNuevo / 250), racha: 3 };
               localStorage.setItem(`gamification_${user.id}`, JSON.stringify(defaultData));
             }
             location.state.recompensasEntregadas = true;

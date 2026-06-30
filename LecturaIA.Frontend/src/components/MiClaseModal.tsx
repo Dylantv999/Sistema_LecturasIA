@@ -1,6 +1,7 @@
 import { confirmacionAccion } from '../utils/alerts';
 import { useEffect, useState } from 'react';
 import { perfilService, type AulaDetalle } from '../services/perfilService';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface MiClaseModalProps {
   isOpen: boolean;
@@ -89,118 +90,118 @@ export default function MiClaseModal({ isOpen, onClose }: MiClaseModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 font-body">
+      <motion.div 
+        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+        className="bg-white rounded-[32px] shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto border-4 border-slate-100"
+      >
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6 rounded-t-lg">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-3">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-              <h2 className="text-2xl font-bold">Mi Clase</h2>
+        <div className="bg-gradient-to-r from-secondary to-orange-400 text-white p-6 md:p-8 rounded-t-[28px] relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/3"></div>
+          <div className="flex justify-between items-center relative z-10">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-white/20 rounded-[16px] flex items-center justify-center backdrop-blur-sm border-2 border-white/30 rotate-3">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <h2 className="text-3xl font-black tracking-tight">Mi Clase</h2>
             </div>
             <button
               onClick={onClose}
-              className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition"
+              className="text-white hover:bg-white/20 rounded-full p-2 transition-colors"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
         </div>
 
         {/* Contenido */}
-        <div className="p-6 space-y-6">
+        <div className="p-6 md:p-8 space-y-6">
           {/* Mensajes de éxito/error */}
-          {success && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <div className="flex items-center space-x-2 text-green-800">
-                <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span className="font-medium">{success}</span>
-              </div>
-            </div>
-          )}
-
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <div className="flex items-center space-x-2 text-red-800">
-                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>{error}</span>
-              </div>
-            </div>
-          )}
+          <AnimatePresence>
+            {success && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="bg-tertiary/10 border-2 border-tertiary/30 rounded-[20px] p-4">
+                <div className="flex items-center space-x-3 text-tertiary">
+                  <svg className="w-6 h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-bold">{success}</span>
+                </div>
+              </motion.div>
+            )}
+            {error && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="bg-red-50 border-2 border-red-200 rounded-[20px] p-4">
+                <div className="flex items-center space-x-3 text-red-600">
+                  <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="font-bold">{error}</span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Estado de Vinculación */}
           {isLoadingClase ? (
-            <div className="flex justify-center items-center py-8">
-              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+            <div className="flex flex-col justify-center items-center py-12 space-y-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-secondary"></div>
+              <p className="text-slate-500 font-bold">Buscando tu clase...</p>
             </div>
           ) : claseActual ? (
-            <div className="bg-green-50 border border-green-200 p-6 rounded-lg">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="bg-green-500 rounded-full p-2">
-                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            <div className="bg-slate-50 border-2 border-slate-100 p-6 md:p-8 rounded-[24px]">
+              <div className="flex items-start justify-between mb-6">
+                <div className="flex items-center space-x-4">
+                  <div className="bg-tertiary rounded-[16px] p-3 shadow-md shadow-tertiary/20">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                   <div>
-                    <p className="text-sm text-green-600 font-medium">Clase Actual</p>
-                    <p className="text-xl font-bold text-gray-900">{claseActual.nombre}</p>
+                    <p className="text-sm font-black text-tertiary uppercase tracking-wider mb-1">Clase Actual</p>
+                    <p className="text-2xl font-black text-slate-800 leading-none">{claseActual.nombre}</p>
                   </div>
                 </div>
               </div>
 
               {claseActual.descripcion && (
-                <p className="text-gray-700 mb-4">{claseActual.descripcion}</p>
+                <p className="text-slate-600 mb-6 font-medium bg-white p-4 rounded-[16px] border-2 border-slate-100">{claseActual.descripcion}</p>
               )}
 
-              <div className="space-y-2 text-sm text-gray-600 mb-4">
-                <div className="flex items-center space-x-2">
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+              <div className="space-y-3 text-sm font-bold text-slate-600 mb-8 bg-white p-5 rounded-[20px] border-2 border-slate-100">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary">🧑‍🏫</div>
                   <span><strong>Docente:</strong> {claseActual.nombreDocente}</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-secondary/10 rounded-full flex items-center justify-center text-secondary">👥</div>
                   <span><strong>Estudiantes:</strong> {claseActual.cantidadEstudiantes}</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <span><strong>Creada:</strong>
-                      {claseActual.fechaCreacion
-                        ? new Date(claseActual.fechaCreacion).toLocaleDateString()
-                        : 'No disponible'}
-                  </span>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500">📅</div>
+                  <span><strong>Creada:</strong> {claseActual.fechaCreacion ? new Date(claseActual.fechaCreacion).toLocaleDateString() : 'No disponible'}</span>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-green-200">
+              <div className="pt-2">
                 <button
                   onClick={handleSalir}
                   disabled={isLoading}
-                  className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  className="w-full flex items-center justify-center space-x-2 px-6 py-4 bg-red-100 text-red-600 hover:bg-red-500 hover:text-white rounded-[20px] disabled:opacity-50 transition-all font-black text-lg border-2 border-red-200 hover:border-red-500"
                 >
                   {isLoading ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      <div className="animate-spin rounded-full h-5 w-5 border-4 border-red-600 border-t-transparent hover:border-white"></div>
                       <span>Procesando...</span>
                     </>
                   ) : (
                     <>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                       </svg>
                       <span>Salir de la Clase</span>
                     </>
@@ -210,23 +211,25 @@ export default function MiClaseModal({ isOpen, onClose }: MiClaseModalProps) {
             </div>
           ) : (
             <div>
-              <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-6">
-                <div className="flex items-start space-x-3">
-                  <svg className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+              <div className="bg-secondary/10 border-2 border-secondary/20 p-5 rounded-[24px] mb-8">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-secondary/20 p-2 rounded-[12px] flex-shrink-0">
+                    <svg className="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
                   <div>
-                    <p className="text-yellow-800 font-medium">No estás vinculado a ninguna clase</p>
-                    <p className="text-yellow-700 text-sm mt-1">
-                      Ingresa el código de vinculación que te proporcionó tu docente para unirte.
+                    <p className="text-secondary font-black text-lg mb-1">¡No tienes clase todavía!</p>
+                    <p className="text-secondary/80 text-sm font-bold leading-relaxed">
+                      Pídele a tu profesor el código secreto de vinculación de 6 letras para unirte a tus compañeros.
                     </p>
                   </div>
                 </div>
               </div>
 
               {/* Formulario de unirse */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="bg-slate-50 p-6 rounded-[24px] border-2 border-slate-100">
+                <label className="block text-sm font-black text-slate-700 mb-3 uppercase tracking-wider">
                   Código de Vinculación
                 </label>
                 <div className="flex space-x-2">
@@ -240,32 +243,32 @@ export default function MiClaseModal({ isOpen, onClose }: MiClaseModalProps) {
                       }
                     }}
                     onKeyPress={handleKeyPress}
-                    placeholder="Ej: BCH47X"
+                    placeholder="BCH47X"
                     maxLength={6}
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-2xl font-bold tracking-wider uppercase"
+                    className="flex-1 px-6 py-4 border-4 border-slate-200 rounded-[20px] focus:ring-0 focus:border-secondary text-center text-3xl font-black tracking-[0.25em] uppercase text-slate-800 placeholder-slate-300 transition-colors"
                     disabled={isLoading}
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  El código debe tener 6 caracteres (letras y números)
+                <p className="text-xs font-bold text-slate-400 mt-3 text-center">
+                  Introduce los 6 caracteres (letras y números)
                 </p>
 
                 <button
                   onClick={handleUnirse}
                   disabled={isLoading || codigoVinculacion.length !== 6}
-                  className="w-full mt-4 flex items-center justify-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
+                  className="w-full mt-6 flex items-center justify-center space-x-2 px-6 py-4 bg-secondary text-white rounded-[20px] hover:bg-orange-600 disabled:opacity-50 disabled:bg-slate-300 transition-all font-black text-xl shadow-lg shadow-secondary/30 disabled:shadow-none hover:scale-[1.02] active:scale-95"
                 >
                   {isLoading ? (
                     <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                      <span>Verificando código...</span>
+                      <div className="animate-spin rounded-full h-6 w-6 border-4 border-white border-t-transparent"></div>
+                      <span>Verificando magia...</span>
                     </>
                   ) : (
                     <>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
-                      <span>Unirse a Clase</span>
+                      <span>¡Unirme a la Clase!</span>
                     </>
                   )}
                 </button>
@@ -273,17 +276,7 @@ export default function MiClaseModal({ isOpen, onClose }: MiClaseModalProps) {
             </div>
           )}
         </div>
-
-        {/* Footer */}
-        <div className="bg-gray-50 px-6 py-4 rounded-b-lg flex justify-end">
-          <button
-            onClick={onClose}
-            className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition font-medium"
-          >
-            Cerrar
-          </button>
-        </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
